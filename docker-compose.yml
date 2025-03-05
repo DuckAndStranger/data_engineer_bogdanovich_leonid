@@ -7,22 +7,31 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: postgres_db
+      POSTGRES_DB: forum
       PGDATA: /var/lib/postgresql/data/pgdata
     ports:
       - "5432:5432"
     volumes:
       - ./pgdata:/var/lib/postgresql/data/pgdata
       - ./db-init.sql:/docker-entrypoint-initdb.d/init.sql
-    command: 
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres -d postgres_db" ]
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d forum" ]
       interval: 30s
       timeout: 10s
       retries: 5
     restart: unless-stopped
     tty: true
     stdin_open: true
+
+  data_generator:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./db-generate-data.py:/app/db-generate-data.py
 
 volumes:
   pgdata:
