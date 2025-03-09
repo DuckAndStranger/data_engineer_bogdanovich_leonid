@@ -20,7 +20,7 @@ def extract_logs(
             password=postgres_password
         )
 
-        query = sql.SQL("SELECT * FROM logs WHERE time BETWEEN %s AND %s")
+        query = sql.SQL("SELECT * FROM logs WHERE DATE(time) BETWEEN %s AND %s")
         data = pd.read_sql_query(
             query.as_string(conn),
             conn,
@@ -47,7 +47,7 @@ def transform_data(data):
     final_data['anonymous_comments_ratio'] = round(
         anonymous_comments / all_comments, 2)
     final_data['comments_count'] = all_comments
-    topic_count = data[data['activity_type'] == 5 and data['server_respoce'] != 401].groupby('day')['id'].count(
+    topic_count = data[(data['activity_type'] == 5) & (data['server_response'] != 401)].groupby('day')['id'].count(
     ) - data[data['activity_type'] == 7].groupby('day')['id'].count()
     accumulated_topic_count = topic_count.cumsum()
     topic_count_change = round(accumulated_topic_count.pct_change() * 100, 2)
