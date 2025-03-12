@@ -37,5 +37,10 @@
    script.py принимает начальную и конечные даты а также названия файла, в который запишутся результаты.
    Пример:
    ```bash
-   python3 script.py --start_date 2025-01-01 --end_date 2025-01-30 --output data.csv
+   python script.py --start_date 2025-01-01 --end_date 2025-01-30 --output data.csv
    ```
+
+## Возможные проблемы
+
+   - script.py может выдать ошибку, если в системе запущен postgres не в контейнере. 
+     Перед запуском отключите процесс postgres'а.

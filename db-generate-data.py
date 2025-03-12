@@ -131,8 +131,7 @@ class DataGenerator:
             count):
         for _ in range(count):
             cookie, time_reg = self.generate_first_visit(date)
-            registration_time = self.generate_time(
-                time_reg, min_minutes=2, max_minutes=5)
+            registration_time = self.generate_time(time_reg, min_minutes=2, max_minutes=5)
             last_user_id = self.generate_users()[0]
             user_cookies[last_user_id] = cookie
             user_ids.append(last_user_id)
@@ -159,9 +158,7 @@ class DataGenerator:
                 break
             user_id = random.choice(available_for_login)
             available_for_login.remove(user_id)
-            login_time = self.generate_time(
-                user_last_action[user_id], hour_shift=random.randint(
-                    5, 10), min_minutes=2, max_minutes=10)
+            login_time = self.generate_time(user_last_action[user_id], hour_shift=random.randint(5, 10), min_minutes=2, max_minutes=10)
             if user_id not in user_cookies:
                 user_cookies[user_id] = self.generate_cookie()
             cookie = user_cookies[user_id]
@@ -184,8 +181,7 @@ class DataGenerator:
             available_users = list(set(user_ids) - set(logged_users))
             if available_users:
                 user_id = random.choice(available_users)
-                time = self.generate_time(
-                    user_last_action[user_id], min_minutes=5, max_minutes=15)
+                time = self.generate_time(user_last_action[user_id], min_minutes=5, max_minutes=15)
                 if user_id not in user_cookies:
                     user_cookies[user_id] = self.generate_cookie()
                 cookie = user_cookies[user_id]
@@ -215,9 +211,7 @@ class DataGenerator:
             if not logged_users:
                 break
             user_id = random.choice(logged_users)
-            time = self.generate_time(
-                user_last_action[user_id], hour_shift=random.randint(
-                    0, 3), min_minutes=5, max_minutes=15)
+            time = self.generate_time(user_last_action[user_id], hour_shift=random.randint(0, 3), min_minutes=5, max_minutes=15)
             cookie = user_cookies[user_id]
             topic_id = self.generate_topics(user_id)[0]
             self.cur.execute("""
@@ -263,8 +257,7 @@ class DataGenerator:
 
             if user_id:
                 user_last_action[user_id] = time
-            comment_time = self.generate_time(
-                time, min_minutes=10, max_minutes=20)
+            comment_time = self.generate_time(time, min_minutes=10, max_minutes=20)
             comment_text = self.fake.text(max_nb_chars=200)
             if topic_id not in comment_ids:
                 comment_ids[topic_id] = []
@@ -335,8 +328,7 @@ class DataGenerator:
             if not logged_users:
                 break
             user_id = random.choice(logged_users)
-            time = user_last_action[user_id] + \
-                timedelta(minutes=random.randint(5, 10))
+            time = user_last_action[user_id] + timedelta(minutes=random.randint(5, 10))
             cookie = user_cookies[user_id]
             self.cur.execute("""
                 INSERT INTO logs (time, user_id, activity_type, activity_id, server_response, cookie)
@@ -354,7 +346,6 @@ class DataGenerator:
             user_cookies,
             logged_users):
         user_last_action = {user_id: date for user_id in user_ids}
-        last_anonymous_time = date
 
         self.generate_registration(
             date,

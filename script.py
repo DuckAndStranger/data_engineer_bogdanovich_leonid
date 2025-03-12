@@ -37,18 +37,13 @@ def transform_data(data):
     data['day'] = data['time'].dt.date
     unique_days = data['day'].unique()
     final_data = pd.DataFrame()
-    registrations = data[data['activity_type'] == 2].groupby('day')[
-        'user_id'].count()
+    registrations = data[data['activity_type'] == 2].groupby('day')['user_id'].count()
     final_data['number_of_new_users'] = registrations
-    anonymous_comments = data[(data['activity_type'] == 8) & (
-        data['user_id'].isnull())].groupby('day')['id'].count()
-    all_comments = data[data['activity_type'] == 8].groupby('day')[
-        'id'].count()
-    final_data['anonymous_comments_ratio'] = round(
-        anonymous_comments / all_comments, 2)
+    anonymous_comments = data[(data['activity_type'] == 8) & (data['user_id'].isnull())].groupby('day')['id'].count()
+    all_comments = data[data['activity_type'] == 8].groupby('day')['id'].count()
+    final_data['anonymous_comments_ratio'] = round(anonymous_comments / all_comments, 2)
     final_data['comments_count'] = all_comments
-    topic_count = data[(data['activity_type'] == 5) & (data['server_response'] != 401)].groupby('day')['id'].count(
-    ) - data[data['activity_type'] == 7].groupby('day')['id'].count()
+    topic_count = data[(data['activity_type'] == 5) & (data['server_response'] != 401)].groupby('day')['id'].count() - data[data['activity_type'] == 7].groupby('day')['id'].count()
     accumulated_topic_count = topic_count.cumsum()
     topic_count_change = round(accumulated_topic_count.pct_change() * 100, 2)
     final_data['topic_count_change'] = topic_count_change
